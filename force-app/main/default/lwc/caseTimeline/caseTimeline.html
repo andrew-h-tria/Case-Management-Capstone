@@ -1,0 +1,48 @@
+<template>
+    <lightning-card title="Case Activity Timeline" icon-name="standard:log_a_call">
+        <div class="slds-p-around_medium">
+            <template if:true={activities}>
+                <ul class="slds-timeline">
+                    <template for:each={activities} for:item="act">
+                        <li key={act.Id}>
+                            <div class="slds-timeline__item_expandable slds-timeline__item_event">
+                                <span class="slds-assistive-text">Event</span>
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <div class="slds-timeline__icon" title="event">
+                                            <lightning-icon icon-name="standard:event" size="small"></lightning-icon>
+                                        </div>
+                                        <div class="slds-active-state-line"></div>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <div class="slds-p-left_large">
+                                            <div class="slds-grid slds-grid_align-spread slds-timeline__trigger">
+                                                <div class="slds-grid slds-grid_vertical-align-center slds-truncate_container_75 slds-no-space">
+                                                    <h3 class="slds-truncate" title={act.TriaTeamA__Activity_Type__c}>
+                                                        <strong>{act.TriaTeamA__Activity_Type__c}</strong>
+                                                    </h3>
+                                                </div>
+                                                <div class="slds-timeline__actions_inline">
+                                                    <lightning-formatted-date-time value={act.CreatedDate} hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                                                </div>
+                                            </div>
+                                            <p class="slds-m-top_xx-small">
+                                                {act.TriaTeamA__Description__c}
+                                            </p>
+                                            <p class="slds-text-color_weak slds-text-body_small">
+                                                User: {act.CreatedBy.Name}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+            <template if:false={activities}>
+                <p class="slds-p-around_small">No routing activities found for this case.</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

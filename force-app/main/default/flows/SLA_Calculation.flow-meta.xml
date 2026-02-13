@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>65.0</apiVersion>
+    <assignments>
+        <name>SLA_High</name>
+        <label>SLA High</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Target</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>High_Prio</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>SLA_Low</name>
+        <label>SLA Low</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Target</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Low_Prio</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>SLA_Mid</name>
+        <label>SLA Mid</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Target</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Mid_Prio</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Determine_SLA</name>
+        <label>Determine SLA</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>SLA_Low</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Low Priority</defaultConnectorLabel>
+        <rules>
+            <name>High_Priority</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Priority</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>High</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SLA_High</targetReference>
+            </connector>
+            <label>High Priority</label>
+        </rules>
+        <rules>
+            <name>Medium_Priority</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Priority</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Medium</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SLA_Mid</targetReference>
+            </connector>
+            <label>Medium Priority</label>
+        </rules>
+    </decisions>
+    <description>Assigns SLA dates based on priority</description>
+    <environments>Default</environments>
+    <formulas>
+        <name>High_Prio</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() + 1</expression>
+    </formulas>
+    <formulas>
+        <name>Low_Prio</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() + 3</expression>
+    </formulas>
+    <formulas>
+        <name>Mid_Prio</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() + 2</expression>
+    </formulas>
+    <interviewLabel>SLA Calculation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>SLA Calculation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Determine_SLA</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>Priority</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Target</name>
+        <dataType>DateTime</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

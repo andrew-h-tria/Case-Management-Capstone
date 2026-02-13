@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="Case Details">
+
+    <lightning-record-view-form
+        record-id={caseId}
+        object-api-name="Case">
+
+        <lightning-output-field field-name="Subject"></lightning-output-field>
+        <lightning-output-field field-name="Status"></lightning-output-field>
+        <lightning-output-field field-name="Priority"></lightning-output-field>
+        <lightning-output-field field-name="TriaTeamA__SLA_Target__c"></lightning-output-field>
+        <lightning-output-field field-name="TriaTeamA__External_Provider_Selected__c"></lightning-output-field>
+
+    </lightning-record-view-form>
+
+</lightning-card>
+
+</template>

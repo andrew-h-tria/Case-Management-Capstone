@@ -1,0 +1,38 @@
+<template>
+    <div class="case-console-wrapper">
+
+        <lightning-card title="Case Console">
+            <div class="console-grid">
+
+                <!-- LEFT: Filters + List -->
+                <div class="console-left">
+                    <c-case-filters
+                        onfilterchange={handleFilterChange}>
+                    </c-case-filters>
+
+                    <c-case-list
+                        filters={filters}
+                        oncaseselect={handleCaseSelect}>
+                    </c-case-list>
+                </div>
+
+                <!-- RIGHT: Case Detail -->
+                <div class="console-right">
+                    <template if:true={selectedCaseId}>
+                        <c-case-detail-panel
+                            case-id={selectedCaseId}>
+                        </c-case-detail-panel>
+                    </template>
+
+                    <template if:false={selectedCaseId}>
+                        <div class="empty-state">
+                            Select a case to view details
+                        </div>
+                    </template>
+                </div>
+
+            </div>
+        </lightning-card>
+
+    </div>
+</template>

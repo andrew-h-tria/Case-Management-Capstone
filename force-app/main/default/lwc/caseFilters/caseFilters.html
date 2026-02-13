@@ -1,0 +1,38 @@
+<template>
+    <lightning-card title="Filters" icon-name="utility:filterList">
+        <div class="slds-p-around_small">
+
+            <lightning-combobox
+                label="Status"
+                value={filters.status}
+                options={statusOptions}
+                data-field="status"
+                onchange={handleChange}>
+            </lightning-combobox>
+
+            <lightning-combobox
+                label="Priority"
+                value={filters.priority}
+                options={priorityOptions}
+                data-field="priority"
+                onchange={handleChange}>
+            </lightning-combobox>
+
+            <lightning-combobox
+                label="Record Type"
+                value={filters.recordType}
+                options={recordTypeOptions}
+                data-field="recordType"
+                onchange={handleChange}>
+            </lightning-combobox>
+
+            <lightning-input
+                type="checkbox"
+                label="My Assignments"
+                checked={filters.myCasesOnly}
+                onchange={handleCheckbox}>
+            </lightning-input>
+
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Sends escalation alert for High Priority cases.</description>
+        <name>Send_Supervisor_Email</name>
+        <label>Send Supervisor Email</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>Case.Case_Priority_Escalation_Alert</actionName>
+        <actionType>emailAlert</actionType>
+        <connector>
+            <targetReference>Create_Case_Activity_Log</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>Case.Case_Priority_Escalation_Alert</nameSegment>
+    </actionCalls>
+    <apiVersion>65.0</apiVersion>
+    <decisions>
+        <description>Evaluates if the case is High Priority and if the priority has changed, ensuring supervisor notifications only fire when necessary.</description>
+        <name>Check_for_High_Priority_Escalation</name>
+        <label>Check for High Priority Escalation</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Priority is NOT High</defaultConnectorLabel>
+        <rules>
+            <name>Priority_is_High</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Priority</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>High</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Supervisor_Email</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Priority is High</label>
+        </rules>
+    </decisions>
+    <description>Adding Supervisor Email Alert and Case Activity Logging.</description>
+    <environments>Default</environments>
+    <formulas>
+        <description>Text variable to store the &apos;Intake Created&apos; string for the initial activity record.</description>
+        <name>txtIntakeCreated</name>
+        <dataType>String</dataType>
+        <expression>&quot;Intake Created&quot;</expression>
+    </formulas>
+    <interviewLabel>Case Creation Automation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Case Creation Automation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Logs the escalation event for the timeline.</description>
+        <name>Create_Case_Activity_Log</name>
+        <label>Create Case Activity Log</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Activity_Type__c</field>
+            <value>
+                <stringValue>Routing</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Case__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description__c</field>
+            <value>
+                <elementReference>txtCaseActivityLogBody</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case_Activity__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Creates the initial timeline record for the Intake stage.</description>
+        <name>Create_Intake_Activity_Record</name>
+        <label>Create Intake Activity Record</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_for_High_Priority_Escalation</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Activity_Type__c</field>
+            <value>
+                <stringValue>Intake</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Case__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description__c</field>
+            <value>
+                <elementReference>txtIntakeCreated</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case_Activity__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordUpdates>
+        <description>Updates the Case Status to &apos;In Triage&apos; upon creation to ensure the case is correctly queued for the intake team.</description>
+        <name>Update_Status_to_Triage</name>
+        <label>Update Status to Triage</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Create_Intake_Activity_Record</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>New</stringValue>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>In_Triage</stringValue>
+            </value>
+        </inputAssignments>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Update_Status_to_Triage</targetReference>
+        </connector>
+        <object>Case</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+    <textTemplates>
+        <description>Stores the text that will be saved into the Description field of the Case Activity record for the timeline.</description>
+        <name>txtCaseActivityDescription</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Case priority changed to High. Supervisor alert sent.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>The actual text that will be saved into the Description field of the Case Activity record for the user to see.</description>
+        <name>txtCaseActivityLogBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>Case priority changed to High. Supervisor alert sent.</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Explains the purpose of the Create Records element for the Case Activity object.</description>
+        <name>txtCreateRecordDescription</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Generates a history record in the Case Activity object to be displayed by the Timeline LWC.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Explains the purpose of the Email Action element within the Flow canvas.</description>
+        <name>txtEmailBoxDescription</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;Triggers an official email notification to the Supervisor group when a Case is escalated.&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Explains the purpose of the initial Intake logging box.</description>
+        <name>txtIntakeBoxDescription</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;This step creates the very first timeline record to show that the Case has entered the Intake stage.&lt;/p&gt;</text>
+    </textTemplates>
+</Flow>

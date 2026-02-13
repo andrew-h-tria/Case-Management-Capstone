@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sub_Category__c</fullName>
+    <externalId>false</externalId>
+    <label>Sub Category</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Triage_Category__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Urgent Care</fullName>
+                <default>false</default>
+                <label>Urgent Care</label>
+            </value>
+            <value>
+                <fullName>Prescription</fullName>
+                <default>false</default>
+                <label>Prescription</label>
+            </value>
+            <value>
+                <fullName>Specialist Referral</fullName>
+                <default>false</default>
+                <label>Specialist Referral</label>
+            </value>
+            <value>
+                <fullName>Mental Health</fullName>
+                <default>false</default>
+                <label>Mental Health</label>
+            </value>
+            <value>
+                <fullName>Emergency Shelter</fullName>
+                <default>false</default>
+                <label>Emergency Shelter</label>
+            </value>
+            <value>
+                <fullName>Rent Assistance</fullName>
+                <default>false</default>
+                <label>Rent Assistance</label>
+            </value>
+            <value>
+                <fullName>Permanent Housing</fullName>
+                <default>false</default>
+                <label>Permanent Housing</label>
+            </value>
+            <value>
+                <fullName>Repairs</fullName>
+                <default>false</default>
+                <label>Repairs</label>
+            </value>
+            <value>
+                <fullName>Food Bank</fullName>
+                <default>false</default>
+                <label>Food Bank</label>
+            </value>
+            <value>
+                <fullName>Meal Delivery</fullName>
+                <default>false</default>
+                <label>Meal Delivery</label>
+            </value>
+            <value>
+                <fullName>Nutrition Counseling</fullName>
+                <default>false</default>
+                <label>Nutrition Counseling</label>
+            </value>
+            <value>
+                <fullName>SNAP Benefits</fullName>
+                <default>false</default>
+                <label>SNAP Benefits</label>
+            </value>
+            <value>
+                <fullName>General Inquiry</fullName>
+                <default>false</default>
+                <label>General Inquiry</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Medical</controllingFieldValue>
+            <valueName>Urgent Care</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Medical</controllingFieldValue>
+            <valueName>Prescription</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Medical</controllingFieldValue>
+            <valueName>Specialist Referral</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Medical</controllingFieldValue>
+            <valueName>Mental Health</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Housing</controllingFieldValue>
+            <valueName>Emergency Shelter</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Housing</controllingFieldValue>
+            <valueName>Rent Assistance</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Housing</controllingFieldValue>
+            <valueName>Permanent Housing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Housing</controllingFieldValue>
+            <valueName>Repairs</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nutrition</controllingFieldValue>
+            <valueName>Food Bank</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nutrition</controllingFieldValue>
+            <valueName>Meal Delivery</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nutrition</controllingFieldValue>
+            <valueName>Nutrition Counseling</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Nutrition</controllingFieldValue>
+            <valueName>SNAP Benefits</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <valueName>General Inquiry</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Other</controllingFieldValue>
+            <valueName>Other</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

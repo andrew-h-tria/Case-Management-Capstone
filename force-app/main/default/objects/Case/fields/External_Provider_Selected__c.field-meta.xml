@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>External_Provider_Selected__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The specific provider chosen for this case after the search is complete.</description>
+    <externalId>false</externalId>
+    <label>External Provider Selected</label>
+    <referenceTo>Case_Provider__c</referenceTo>
+    <relationshipLabel>Cases</relationshipLabel>
+    <relationshipName>Cases</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

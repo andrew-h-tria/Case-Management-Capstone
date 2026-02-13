@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Provider Interaction" icon-name="standard:case_external_operations">
+        <div class="slds-var-p-around_medium">
+            
+            <lightning-button 
+                label="Find Providers" 
+                onclick={handleFindProviders} 
+                variant="brand"
+                class="slds-var-m-bottom_medium">
+            </lightning-button>
+
+            <template if:true={providers}>
+                <div class="slds-box slds-theme_shade slds-var-m-top_medium">
+                    <ul class="slds-has-dividers_around-space">
+                        <template for:each={providers} for:item="prov">
+                            <li key={prov.Id} class="slds-item">
+                                <div class="slds-grid slds-grid_vertical-align-center">
+                                    <div class="slds-col">
+                                        <strong>{prov.Name}</strong><br/>
+                                        <span class="slds-text-body_small">
+                                            Specialty: {prov.TriaTeamA__Specialty__c}
+                                        </span>
+                                    </div>
+                                    <div class="slds-col slds-no-flex">
+                                        <lightning-button 
+                                            label="Select" 
+                                            name={prov.Id} 
+                                            onclick={handleSelectProvider}
+                                            variant="neutral">
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
