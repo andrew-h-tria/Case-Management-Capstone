@@ -17,7 +17,7 @@ The project utilizes **Source-Driven Development (SFDX)**, modularizing all meta
 * **Core Hub:** The `Case` object acts as the primary record.
 * **Case_Activity__c:** Tracks lifecycle events (Intake, Routing, Approval, Resolution).
 * **Case_Provider__c:** Persists external data results for long-term reporting.
-![Project Data Model](ERD.png)
+![Project Data Model](Public Health Case Management ERD Diagram.png)
 
 
 
