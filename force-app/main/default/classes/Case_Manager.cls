@@ -1,8 +1,59 @@
 public with sharing class Case_Manager {
 
     @AuraEnabled
-    public static Id processCase(Id caseId) {
+public static void processCases(List<Id> caseIds) {
 
+    if (caseIds == null || caseIds.isEmpty()) {
+        return;
+    }
+
+    Set<Id> caseIdSet = new Set<Id>(caseIds);
+
+    List<Case> cases = [
+        SELECT Id,
+               TriaTeamA__Triage_Category__c,
+               TriaTeamA__External_Provider_Selected__c
+        FROM Case
+        WHERE Id IN :caseIdSet
+    ];
+
+    //  Call fetchProvidersBulk ONCE for all cases
+    Map<Id, List<TriaTeamA__Case_Provider__c>> caseToProvidersMap = 
+        Case_ExternalProviderService.fetchProvidersBulk(caseIds, cases);
+
+    List<Case> casesToUpdate = new List<Case>();
+
+   
+    for (Case c : cases) {
+        try {
+            // Get pre-fetched providers for this case
+            List<TriaTeamA__Case_Provider__c> providers = caseToProvidersMap.get(c.Id);
+
+            if (providers != null && !providers.isEmpty()) {
+                for (TriaTeamA__Case_Provider__c p : providers) {
+                    if (p.TriaTeamA__Accepting_New_Patients__c) {
+                        c.TriaTeamA__External_Provider_Selected__c = p.Id;
+                        break;
+                    }
+                }
+            }
+
+            casesToUpdate.add(c);
+
+        } catch (Exception e) {
+            // Log but continue processing other cases
+            System.debug('Handled provider error for case: ' + c.Id + ' - ' + e.getMessage());
+        }
+    }
+
+    if (!casesToUpdate.isEmpty()) {
+        update casesToUpdate;
+    }
+}
+
+    // Keep existing single-case method for backward compatibility
+    @AuraEnabled
+    public static Id processCase(Id caseId) {
         Case c = [
             SELECT Id,
                    TriaTeamA__Triage_Category__c,
@@ -12,16 +63,12 @@ public with sharing class Case_Manager {
             LIMIT 1
         ];
 
-        //  Delegate SLA calculation to Flow (as designed)
-
-        //  Fetch + persist providers
         List<TriaTeamA__Case_Provider__c> providers =
             Case_ExternalProviderService.fetchProviders(
                 c.Id,
-                c.Triage_Category__c
+                c.TriaTeamA__Triage_Category__c
             );
 
-        //  Pick first accepting provider
         for (TriaTeamA__Case_Provider__c p : providers) {
             if (p.TriaTeamA__Accepting_New_Patients__c) {
                 c.TriaTeamA__External_Provider_Selected__c = p.Id;
@@ -30,14 +77,6 @@ public with sharing class Case_Manager {
         }
 
         update as user c;
-
-/*
-        insert as user new TriaTeamA__Case_Activity__c(
-            TriaTeamA__Case__c = caseId,
-            TriaTeamA__Activity_Type__c = 'Routing',
-            TriaTeamA__Description__c = 'Auto-selection completed. Provider linked.'
-        );
-        */
         return c.Id;
     }
 
@@ -50,7 +89,6 @@ public with sharing class Case_Manager {
         );
         update as user c;
 
-        // Added activity creation so the Timeline LWC shows the manual selection
         insert as user new TriaTeamA__Case_Activity__c(
             TriaTeamA__Case__c = caseId,
             TriaTeamA__Activity_Type__c = 'Provider Lookup',

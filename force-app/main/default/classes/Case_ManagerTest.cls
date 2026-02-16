@@ -55,4 +55,71 @@ public class Case_ManagerTest {
         List<TriaTeamA__Case_Activity__c> timeline = [SELECT Id FROM TriaTeamA__Case_Activity__c WHERE TriaTeamA__Case__c = :c.Id AND TriaTeamA__Activity_Type__c = 'Provider Lookup'];
         System.assertEquals(1, timeline.size(), 'Manual provider lookup activity should be logged');
     }
+
+
+
+
+
+
+@IsTest
+static void testBulkProcess200Cases() {
+
+    Test.setMock(HttpCalloutMock.class, new ProviderSuccessMock());
+
+    List<Case> cases = new List<Case>();
+
+    for (Integer i = 0; i < 200; i++) {
+        cases.add(
+            new Case(
+                Subject = 'Bulk Case ' + i,
+                Priority = 'Medium',
+                Description = 'This description is long enough to pass validation.',
+                TriaTeamA__Origin__c = 'Web',
+                TriaTeamA__SLA_Target__c = System.today().addDays(3),
+                TriaTeamA__Triage_Category__c = 'medical'
+            )
+        );
+    }
+
+    insert cases;
+
+    Test.startTest();
+
+    List<Id> caseIds = new List<Id>();
+    for (Case c : cases) {
+        caseIds.add(c.Id);
+    }
+
+    Case_Manager.processCases(caseIds);
+
+    Test.stopTest();
+
+    List<Case> updated = [
+        SELECT TriaTeamA__External_Provider_Selected__c
+        FROM Case
+        WHERE Id IN :cases
+    ];
+
+    Integer assignedCount = 0;
+
+    for (Case c : updated) {
+        if (c.TriaTeamA__External_Provider_Selected__c != null) {
+            assignedCount++;
+        }
+    }
+
+    // Assert that all 200 cases have providers assigned
+    System.assertEquals(
+        200,
+        assignedCount,
+        'All 200 cases should have a provider assigned'
+    );
+}
+
+
+
+
+
+
+
 }

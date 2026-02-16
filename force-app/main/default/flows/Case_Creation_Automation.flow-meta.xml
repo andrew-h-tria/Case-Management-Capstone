@@ -166,7 +166,7 @@
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Obsolete</status>
+    <status>Draft</status>
     <textTemplates>
         <description>Stores the text that will be saved into the Description field of the Case Activity record for the timeline.</description>
         <name>txtCaseActivityDescription</name>
