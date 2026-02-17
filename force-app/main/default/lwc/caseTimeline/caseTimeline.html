@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="Case Activity Timeline" icon-name="standard:log_a_call">
         <div class="slds-p-around_medium">
-            <template if:true={activities}>
+            <template if:true={hasActivities}>
                 <ul class="slds-timeline">
                     <template for:each={activities} for:item="act">
                         <li key={act.Id}>
@@ -40,7 +40,7 @@
                     </template>
                 </ul>
             </template>
-            <template if:false={activities}>
+            <template if:false={hasActivities}>
                 <p class="slds-p-around_small">No routing activities found for this case.</p>
             </template>
         </div>

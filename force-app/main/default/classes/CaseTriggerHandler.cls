@@ -18,4 +18,30 @@ public with sharing class CaseTriggerHandler {
             }
         }
     }
+
+    // Logic to create the activity record after the Case is updated
+    // Alex did SLA Flow, so I added this here to handle Timeline record creation
+    public void handleAfter(List<Case> newCases, Map<Id, Case> oldMap) {
+        List<TriaTeamA__Case_Activity__c> activitiesToCreate = new List<TriaTeamA__Case_Activity__c>();
+
+        for (Case c : newCases) {
+            if (oldMap != null) {
+                Case oldCase = oldMap.get(c.Id);
+
+                // Create Timeline Activity when Status changes to Resolved 
+                if (c.Status == 'Resolved' && oldCase.Status != 'Resolved') {
+                    activitiesToCreate.add(new TriaTeamA__Case_Activity__c(
+                        TriaTeamA__Case__c = c.Id,
+                        // Set to 'resolution' to match your restricted picklist values
+                        TriaTeamA__Activity_Type__c = 'resolution', 
+                        TriaTeamA__Description__c = 'Case status was updated to Resolved.'
+                    ));
+                }
+            }
+        }
+
+        if (!activitiesToCreate.isEmpty()) {
+            insert activitiesToCreate;
+        }
+    }
 }

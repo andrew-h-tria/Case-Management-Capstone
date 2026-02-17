@@ -48,10 +48,19 @@
         <label>Create Triage Case</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <connector>
+            <targetReference>Success_Screen</targetReference>
+        </connector>
         <inputAssignments>
             <field>ContactId</field>
             <value>
                 <elementReference>CitizenLookup.recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <elementReference>Description</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -70,6 +79,12 @@
             <field>SLA_Target__c</field>
             <value>
                 <elementReference>Call_SLA_Calculation_Subflow.Target</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>Subject</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -154,8 +169,27 @@
             <fieldType>LargeTextArea</fieldType>
             <isRequired>false</isRequired>
         </fields>
+        <nextOrFinishButtonLabel>Submit Case</nextOrFinishButtonLabel>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <description>Success Popup if Case successfully created from Case Intake Flow.</description>
+        <name>Success_Screen</name>
+        <label>Success Screen</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Success_Message</name>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;strong style=&quot;font-size: 22px;&quot;&gt;Success! Case created.&lt;/strong&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <nextOrFinishButtonLabel>Done</nextOrFinishButtonLabel>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
     </screens>
     <start>
         <locationX>0</locationX>

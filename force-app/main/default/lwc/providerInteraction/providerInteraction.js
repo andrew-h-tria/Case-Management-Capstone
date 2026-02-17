@@ -1,11 +1,16 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import fetchProviders from '@salesforce/apex/Case_ExternalProviderService.fetchProviders';
 import selectProvider from '@salesforce/apex/Case_Manager.selectProvider';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { publish, MessageContext } from 'lightning/messageService';
+import CASE_MC from '@salesforce/messageChannel/caseMessageChannel__c';
 
 export default class ProviderInteraction extends LightningElement {
     @api recordId; // Case Record ID context
     providers;
+
+    @wire(MessageContext)
+    messageContext;
 
     // Fetch providers via Apex service
     handleFindProviders() {
@@ -26,6 +31,11 @@ export default class ProviderInteraction extends LightningElement {
         selectProvider({ caseId: this.recordId, providerId: selectedProvId })
             .then(() => {
                 this.showToast('Success', 'Case updated to In Progress.', 'success');
+                
+                // Publish the message to trigger the refresh in CaseTimeline
+                // Keeps everything in sync without a manual refresh
+                publish(this.messageContext, CASE_MC, { recordId: this.recordId });
+                
                 this.providers = null; 
             })
             .catch(error => {

@@ -59,6 +59,22 @@
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Priority is High</label>
         </rules>
+        <rules>
+            <name>Resolved</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Resolved</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Resolution_Activity</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Resolved</label>
+        </rules>
     </decisions>
     <description>Updated Intake description to plain text for LWC compatibility and added automated Status update to &apos;In Triage&apos;.</description>
     <environments>Default</environments>
@@ -137,6 +153,33 @@
             <field>Description__c</field>
             <value>
                 <stringValue>Initial case intake completed. Status updated to In Triage.</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Case_Activity__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Creates Final Activity as Case is Resolved status</description>
+        <name>Create_Resolution_Activity</name>
+        <label>Create Resolution Activity</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <inputAssignments>
+            <field>Activity_Type__c</field>
+            <value>
+                <stringValue>Resolution</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Case__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description__c</field>
+            <value>
+                <stringValue>Case was closed and resolved.</stringValue>
             </value>
         </inputAssignments>
         <object>Case_Activity__c</object>

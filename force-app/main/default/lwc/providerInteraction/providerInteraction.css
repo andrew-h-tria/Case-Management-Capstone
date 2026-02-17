@@ -1,0 +1,25 @@
+.custom-container {
+    width: 100%;
+    text-align: center;
+}
+
+.button-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+/* The instruction text size */
+.instruction-text {
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.hero-button {
+    --slds-c-button-brand-spacing-block-start: 0.8rem;
+    --slds-c-button-brand-spacing-block-end: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    min-width: 280px;
+}
